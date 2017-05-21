@@ -2,7 +2,6 @@
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
- xmlns:moie="clr-namespace:Microsoft.Office.Interop.Excel;assembly=UiPath.Excel"
  xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
  xmlns:s="clr-namespace:System;assembly=mscorlib"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
@@ -37,7 +36,6 @@
       <x:String>System.Windows.Markup</x:String>
       <x:String>UiPath.Excel</x:String>
       <x:String>System.Xml.Serialization</x:String>
-      <x:String>Microsoft.Office.Interop.Excel</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -66,126 +64,102 @@
   </TextExpression.ReferencesForImplementation>
   <Flowchart sap2010:WorkflowViewState.IdRef="Flowchart_1">
     <Flowchart.Variables>
+      <Variable x:TypeArguments="ui:WorkbookApplication" Default="[new WorkbookApplication(&quot;path&quot;)]" Name="workbooks" />
       <Variable x:TypeArguments="s:String[]" Name="fileList" />
-      <Variable x:TypeArguments="moie:Worksheet" Name="xlWorkSheet" />
-      <Variable x:TypeArguments="ui:WorkbookFile" Default="[new WorkbookFile(&quot;path&quot;)]" Name="mWorkBook" />
-      <Variable x:TypeArguments="ui:WorkbookApplication" Name="wb" />
     </Flowchart.Variables>
     <Flowchart.StartNode>
-      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_6">
-        <Assign sap2010:WorkflowViewState.IdRef="Assign_6">
-          <Assign.To>
-            <OutArgument x:TypeArguments="x:String">[xlWorkSheet.Name]</OutArgument>
-          </Assign.To>
-          <Assign.Value>
-            <InArgument x:TypeArguments="x:String">
-              <Literal x:TypeArguments="x:String" Value="" />
-            </InArgument>
-          </Assign.Value>
-        </Assign>
-        <FlowStep.Next>
-          <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_7">
-            <ui:CommentOut sap2010:WorkflowViewState.IdRef="CommentOut_1">
-              <ui:CommentOut.Body>
-                <Sequence DisplayName="Ignored Activities">
-                  <Assign sap2010:WorkflowViewState.IdRef="Assign_7">
+      <x:Reference>__ReferenceID1</x:Reference>
+    </Flowchart.StartNode>
+    <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+      <Assign sap2010:WorkflowViewState.IdRef="Assign_4">
+        <Assign.To>
+          <OutArgument x:TypeArguments="s:String[]">[fileList]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="s:String[]">[Directory.GetFiles("")]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <FlowStep.Next>
+        <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_5">
+          <ui:ForEach x:TypeArguments="x:String" DisplayName="For each" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[fileList]">
+            <ui:ForEach.Body>
+              <ActivityAction x:TypeArguments="x:String">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="x:String" Name="file" />
+                </ActivityAction.Argument>
+                <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_3">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="ui:GenericValue" Name="extension" />
+                    <Variable x:TypeArguments="x:String" Default="xlsx" Name="EXTENSION_XLSX" />
+                  </Sequence.Variables>
+                  <Assign sap2010:Annotation.AnnotationText="ファイルの拡張子のみ取得" sap2010:WorkflowViewState.IdRef="Assign_5">
                     <Assign.To>
-                      <OutArgument x:TypeArguments="moie:Worksheet">[xlWorkSheet]</OutArgument>
+                      <OutArgument x:TypeArguments="ui:GenericValue">[extension]</OutArgument>
                     </Assign.To>
                     <Assign.Value>
-                      <InArgument x:TypeArguments="moie:Worksheet">[workbooks.Worksheets]</InArgument>
+                      <InArgument x:TypeArguments="ui:GenericValue">[Path.GetExtension(file)]</InArgument>
                     </Assign.Value>
                   </Assign>
+                  <If Condition="[EXTENSION_XLSX.Equals(extension)]" sap2010:WorkflowViewState.IdRef="If_1">
+                    <If.Then>
+                      <WriteLine DisplayName="Write line" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="拡張子はxlsxです" />
+                    </If.Then>
+                    <If.Else>
+                      <WriteLine DisplayName="Write line" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="拡張子はxlsxではないです" />
+                    </If.Else>
+                  </If>
                 </Sequence>
-              </ui:CommentOut.Body>
-            </ui:CommentOut>
-            <FlowStep.Next>
-              <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_8">
-                <ui:ExcelApplicationScope Password="{x:Null}" DisplayName="Excel application scope" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_1" Workbook="[wb]" WorkbookPath="C:\WorkFolder\UiPath\TestProject\dev\output\チェック_.xlsx">
-                  <ui:ExcelApplicationScope.Body>
-                    <ActivityAction x:TypeArguments="ui:WorkbookApplication">
-                      <ActivityAction.Argument>
-                        <DelegateInArgument x:TypeArguments="ui:WorkbookApplication" Name="ExcelWorkbookScope" />
-                      </ActivityAction.Argument>
-                      <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_4">
-                        <Assign sap2010:WorkflowViewState.IdRef="Assign_8">
-                          <Assign.To>
-                            <OutArgument x:TypeArguments="ui:WorkbookFile">[mWorkBook]</OutArgument>
-                          </Assign.To>
-                          <Assign.Value>
-                            <InArgument x:TypeArguments="ui:WorkbookFile">[new WorkBook("path")]</InArgument>
-                          </Assign.Value>
-                        </Assign>
-                      </Sequence>
-                    </ActivityAction>
-                  </ui:ExcelApplicationScope.Body>
-                </ui:ExcelApplicationScope>
-              </FlowStep>
-            </FlowStep.Next>
-          </FlowStep>
-        </FlowStep.Next>
-      </FlowStep>
-    </Flowchart.StartNode>
+              </ActivityAction>
+            </ui:ForEach.Body>
+          </ui:ForEach>
+        </FlowStep>
+      </FlowStep.Next>
+    </FlowStep>
     <x:Reference>__ReferenceID0</x:Reference>
-    <x:Reference>__ReferenceID1</x:Reference>
-    <x:Reference>__ReferenceID2</x:Reference>
-    <sads:DebugSymbol.Symbol>dzNDOlxXb3JrRm9sZGVyXGdpdGh1YlxYYW1sdGlwc1xUZXN0UHJvamVjdFx0ZXN0LnhhbWwNQwOFAQ8CAQFHO0dhAgECTAlVEgIBDVgNZR0CAQxoEXosAgEDUg9SPgIBD041TkcCAQ5oqAForgECAQpovAFo9AECAQluF3ciAgEEbxl2IgIBBXRLdGECAQhxTHFXAgEG</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzNDOlxXb3JrRm9sZGVyXGdpdGh1YlxYYW1sdGlwc1xUZXN0UHJvamVjdFx0ZXN0LnhhbWwSQQN4DwIBAUNCQ28CAQJKB1EQAgESVAtyGAIBA080T0wCARVMNUw/AgETVH5UigECARBaEW8cAgEEXUJdSAIBBV8TZhwCAQxnE24YAgEGZEVkXgIBD2FGYVECAQ1nIWdFAgEHaRdpfQIBCmwXbIEBAgEIaW5pegIBC2xubH4CAQk=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="242,62">
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,62">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="242,62">
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="464,90.6666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="209.333333333333,62.6666666666667" />
+      <sap2010:ViewStateData Id="WriteLine_2" sap:VirtualizedContainerService.HintSize="209.333333333333,62.6666666666667" />
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,216.666666666667" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="486,471.333333333333">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="CommentOut_1" sap:VirtualizedContainerService.HintSize="200,52.6666666666667" />
-      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="242,62" />
-      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="264,186">
+      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="502.666666666667,610" />
+      <sap2010:ViewStateData Id="FlowStep_5">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="ExcelApplicationScope_1" sap:VirtualizedContainerService.HintSize="414,334.666666666667">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_8">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">199.895,351.166666666667</av:Point>
+            <av:Point x:Key="ShapeLocation">199.895,265.206666666667</av:Point>
             <av:Size x:Key="ShapeSize">200,52.6666666666667</av:Size>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_7">
+      <sap2010:ViewStateData Id="FlowStep_4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">178.895,239.166666666667</av:Point>
-            <av:Size x:Key="ShapeSize">200,52.6666666666667</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">278.895,291.833333333333 278.895,321.833333333333 299.895,321.833333333333 299.895,351.166666666667</av:PointCollection>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_6">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">178.895,127.166666666667</av:Point>
+            <av:Point x:Key="ShapeLocation">178.895,135.166666666667</av:Point>
             <av:Size x:Key="ShapeSize">242,62</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">299.895,189.166666666667 299.895,219.166666666667 278.895,219.166666666667 278.895,239.166666666667</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">299.895,197.166666666667 299.895,265.206666666667</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -195,11 +169,11 @@
             <x:Boolean x:Key="IsExpanded">False</x:Boolean>
             <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
             <av:Size x:Key="ShapeSize">60,74.6666666666667</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">300,77.1666666666667 300,107.166666666667 299.895,107.166666666667 299.895,127.166666666667</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.1666666666667 300,107.166666666667 299.895,107.166666666667 299.895,135.166666666667</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="test_1" sap:VirtualizedContainerService.HintSize="654,796" />
+      <sap2010:ViewStateData Id="test_1" sap:VirtualizedContainerService.HintSize="654,716" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
